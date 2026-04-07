@@ -38,13 +38,12 @@ const aiResponses = [
   'Top 3 reps avg: $19,200 revenue, 92% usage rate, 28 active cards. Bottom 3 reps avg: $10,400 revenue, 74% usage rate, 11 active cards. The gap is primarily in card activation follow-through — bottom reps issue cards but don\'t drive activation.',
 ]
 
-let idx = 0
-
 export function AIInsightsPage() {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const idxRef = useRef(0)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -62,8 +61,8 @@ export function AIInsightsPage() {
     setInput('')
     setLoading(true)
     setTimeout(() => {
-      const response = aiResponses[idx % aiResponses.length]
-      idx++
+      const response = aiResponses[idxRef.current % aiResponses.length]
+      idxRef.current++
       setMessages((m) => [...m, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',

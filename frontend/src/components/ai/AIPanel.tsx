@@ -25,8 +25,6 @@ const aiResponses = [
   'I analyzed your fleet data. Here are the key insights: Active card utilization is at 77.2%, retention is strong at 84%, and net profit margin is holding at 23%. Main risk: 42 dormant cards costing ~$840/mo in overhead.',
 ]
 
-let responseIdx = 0
-
 export function AIPanel() {
   const { aiPanelOpen, toggleAIPanel } = useStore()
   const [messages, setMessages] = useState<Message[]>([
@@ -35,6 +33,7 @@ export function AIPanel() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const responseIdxRef = useRef(0)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -47,8 +46,8 @@ export function AIPanel() {
     setInput('')
     setLoading(true)
     setTimeout(() => {
-      const response = aiResponses[responseIdx % aiResponses.length]
-      responseIdx++
+      const response = aiResponses[responseIdxRef.current % aiResponses.length]
+      responseIdxRef.current++
       setMessages((m) => [...m, { id: (Date.now() + 1).toString(), role: 'assistant', content: response }])
       setLoading(false)
     }, 1200 + Math.random() * 800)
