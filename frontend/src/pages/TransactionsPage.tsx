@@ -14,7 +14,8 @@ import { Badge } from '@/components/ui/Badge'
 import { ExportButton } from '@/components/ui/ExportButton'
 import { Card } from '@/components/ui/Card'
 import { transactions as initialTx } from '@/lib/mockData'
-import { Play, Pause } from 'lucide-react'
+import { useSocket } from '@/lib/useSocket'
+import { Play, Pause, Wifi, WifiOff } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { format } from 'date-fns'
 
@@ -82,14 +83,27 @@ export function TransactionsPage() {
   const [globalFilter, setGlobalFilter] = useState('')
   const [live, setLive] = useState(true)
   const tableRef = useRef<HTMLDivElement>(null)
+  const { socket, connected } = useSocket()
 
+  // Listen for real-time transactions from backend via WebSocket
   useEffect(() => {
-    if (!live) return
+    if (!socket || !live) return
+    const handler = (tx: Transaction) => {
+      setData((prev) => [tx, ...prev.slice(0, 99)])
+    }
+    socket.on('new_transaction', handler)
+    return () => { socket.off('new_transaction', handler) }
+  }, [socket, live])
+
+  // Fallback: generate mock transactions when WebSocket is not connected
+  const mockNewTxRef = useRef(mockNewTx)
+  useEffect(() => {
+    if (!live || connected) return
     const timer = setInterval(() => {
-      setData((prev) => [mockNewTx(), ...prev.slice(0, 99)])
+      setData((prev) => [mockNewTxRef.current(), ...prev.slice(0, 99)])
     }, 4000)
     return () => clearInterval(timer)
-  }, [live])
+  }, [live, connected])
 
   const table = useReactTable({
     data,
@@ -154,7 +168,21 @@ export function TransactionsPage() {
           </div>
           <div className="px-4 py-2 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
             <span>{table.getFilteredRowModel().rows.length} transactions</span>
-            {live && <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />Live</span>}
+            <div className="flex items-center gap-3">
+              {connected && (
+                <span className="flex items-center gap-1.5 text-blue-400">
+                  <Wifi size={12} />
+                  Live API
+                </span>
+              )}
+              {!connected && live && (
+                <span className="flex items-center gap-1.5 text-zinc-500">
+                  <WifiOff size={12} />
+                  Demo Mode
+                </span>
+              )}
+              {live && <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />Live</span>}
+            </div>
           </div>
         </Card>
       </div>
