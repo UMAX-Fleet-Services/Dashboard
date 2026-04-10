@@ -18,7 +18,7 @@ const app = express()
 const httpServer = createServer(app)
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost']
+  : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:80']
 
 const io = new Server(httpServer, {
   cors: { origin: allowedOrigins, methods: ['GET', 'POST'] }

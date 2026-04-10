@@ -96,11 +96,10 @@ export function TransactionsPage() {
   }, [socket, live])
 
   // Fallback: generate mock transactions when WebSocket is not connected
-  const mockNewTxRef = useRef(mockNewTx)
   useEffect(() => {
     if (!live || connected) return
     const timer = setInterval(() => {
-      setData((prev) => [mockNewTxRef.current(), ...prev.slice(0, 99)])
+      setData((prev) => [mockNewTx(), ...prev.slice(0, 99)])
     }, 4000)
     return () => clearInterval(timer)
   }, [live, connected])
