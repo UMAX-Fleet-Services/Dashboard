@@ -15,8 +15,8 @@ import type { CustomTooltipProps } from '@/lib/chartTypes'
 function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-sm shadow-xl">
-      <p className="text-zinc-400 mb-2">{label}</p>
+    <div className="bg-zinc-900/95 backdrop-blur-xl border border-zinc-700/60 rounded-xl p-3 text-sm shadow-2xl shadow-black/40">
+      <p className="text-zinc-400 mb-2 font-medium">{label}</p>
       {payload.map((p) => (
         <p key={String(p.dataKey)} style={{ color: p.color }} className="font-medium">
           {p.name}: ${(p.value as number)?.toLocaleString()}
@@ -40,18 +40,18 @@ export function RevenueStackedChart() {
           <defs>
             <linearGradient id="fuelGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.5} />
-              <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1} />
+              <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.05} />
             </linearGradient>
             <linearGradient id="feesGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#10B981" stopOpacity={0.5} />
-              <stop offset="95%" stopColor="#10B981" stopOpacity={0.1} />
+              <stop offset="95%" stopColor="#10B981" stopOpacity={0.05} />
             </linearGradient>
             <linearGradient id="premGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#A855F7" stopOpacity={0.5} />
-              <stop offset="95%" stopColor="#A855F7" stopOpacity={0.1} />
+              <stop offset="95%" stopColor="#A855F7" stopOpacity={0.05} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#27272A" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#27272A" vertical={false} />
           <XAxis dataKey="month" tick={{ fill: '#71717A', fontSize: 11 }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fill: '#71717A', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
           <Tooltip content={<TooltipContent />} />

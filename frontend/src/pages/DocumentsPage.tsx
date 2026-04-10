@@ -1,6 +1,6 @@
 import { Layout } from '@/components/layout/Layout'
 import { Card } from '@/components/ui/Card'
-import { FileText, Upload } from 'lucide-react'
+import { FileText, Upload, FolderOpen } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 
 const docs = [
@@ -18,6 +18,13 @@ const typeColor: Record<string, string> = {
   Word: 'text-blue-400',
 }
 
+const categoryIcons: Record<string, string> = {
+  Contracts: '#3B82F6',
+  Financial: '#10B981',
+  Policies: '#F59E0B',
+  Reports: '#A855F7',
+}
+
 export function DocumentsPage() {
   return (
     <Layout>
@@ -33,22 +40,27 @@ export function DocumentsPage() {
         <div className="grid grid-cols-4 gap-4">
           {['Contracts', 'Financial', 'Policies', 'Reports'].map((cat) => {
             const count = docs.filter((d) => d.category === cat).length
+            const color = categoryIcons[cat]
             return (
-              <Card key={cat} className="text-center">
-                <FileText size={24} className="text-zinc-400 mx-auto mb-2" />
+              <Card key={cat} className="text-center group">
+                <div className="flex justify-center mb-2">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105" style={{ backgroundColor: color + '15' }}>
+                    <FolderOpen size={18} style={{ color }} />
+                  </div>
+                </div>
                 <p className="text-zinc-400 text-sm">{cat}</p>
-                <p className="text-white font-bold text-xl mt-1">{count}</p>
+                <p className="text-white font-bold text-xl mt-1 tracking-tight">{count}</p>
               </Card>
             )
           })}
         </div>
 
         <Card className="p-0 overflow-hidden">
-          <div className="px-4 py-3 border-b border-zinc-800">
+          <div className="px-4 py-3 border-b border-zinc-800/60 bg-zinc-900/50">
             <h3 className="text-white font-semibold">All Documents</h3>
           </div>
           <table className="w-full text-sm">
-            <thead className="border-b border-zinc-800">
+            <thead className="border-b border-zinc-800/60">
               <tr>
                 {['Name', 'Type', 'Size', 'Category', 'Date', 'Actions'].map((h) => (
                   <th key={h} className="text-left px-4 py-3 text-zinc-400 font-medium text-xs">{h}</th>
@@ -57,10 +69,10 @@ export function DocumentsPage() {
             </thead>
             <tbody>
               {docs.map((d) => (
-                <tr key={d.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors">
+                <tr key={d.id} className="border-b border-zinc-800/30 hover:bg-zinc-800/20 transition-colors group">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <FileText size={14} className="text-zinc-500" />
+                      <FileText size={14} className="text-zinc-500 group-hover:text-zinc-300 transition-colors" />
                       <span className="text-white">{d.name}</span>
                     </div>
                   </td>
@@ -69,7 +81,7 @@ export function DocumentsPage() {
                   <td className="px-4 py-3 text-zinc-400">{d.category}</td>
                   <td className="px-4 py-3 text-zinc-400 text-xs">{d.date}</td>
                   <td className="px-4 py-3">
-                    <button className="text-blue-400 hover:text-blue-300 text-xs cursor-pointer">Download</button>
+                    <button className="text-blue-400 hover:text-blue-300 text-xs cursor-pointer font-medium transition-colors">Download</button>
                   </td>
                 </tr>
               ))}

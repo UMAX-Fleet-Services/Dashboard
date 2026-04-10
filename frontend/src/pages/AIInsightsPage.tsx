@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Layout } from '@/components/layout/Layout'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { Send, Sparkles } from 'lucide-react'
+import { Send, Sparkles, Zap } from 'lucide-react'
 
 interface Message {
   id: string
@@ -79,13 +79,16 @@ export function AIInsightsPage() {
         {/* Sidebar with quick prompts */}
         <div className="space-y-4">
           <Card>
-            <h3 className="text-white font-semibold text-sm mb-3">Quick Prompts</h3>
-            <div className="space-y-2">
+            <div className="flex items-center gap-2 mb-3">
+              <Zap size={14} className="text-blue-400" />
+              <h3 className="text-white font-semibold text-sm">Quick Prompts</h3>
+            </div>
+            <div className="space-y-1">
               {quickPrompts.map((p) => (
                 <button
                   key={p}
                   onClick={() => sendMessage(p)}
-                  className="w-full text-left text-xs text-zinc-400 hover:text-white hover:bg-zinc-800 px-2 py-1.5 rounded-lg transition-colors cursor-pointer"
+                  className="w-full text-left text-xs text-zinc-400 hover:text-white hover:bg-zinc-800/50 px-2.5 py-2 rounded-xl transition-all duration-200 cursor-pointer"
                 >
                   {p}
                 </button>
@@ -95,10 +98,10 @@ export function AIInsightsPage() {
 
           <Card>
             <h3 className="text-white font-semibold text-sm mb-3">AI Capabilities</h3>
-            <div className="space-y-2 text-xs text-zinc-400">
+            <div className="space-y-2.5 text-xs text-zinc-400">
               {['Fleet analytics', 'Revenue forecasting', 'Churn prediction', 'Performance benchmarking', 'Trend analysis', 'Anomaly detection'].map((c) => (
                 <div key={c} className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0 shadow-sm shadow-blue-400/50" />
                   {c}
                 </div>
               ))}
@@ -107,15 +110,22 @@ export function AIInsightsPage() {
         </div>
 
         {/* Chat area */}
-        <div className="col-span-3 flex flex-col bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+        <div className="col-span-3 flex flex-col bg-zinc-900/80 backdrop-blur-sm border border-zinc-800/80 rounded-2xl overflow-hidden">
           {/* Header */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-800">
-            <div className="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-800/60 bg-zinc-900/50">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center">
               <Sparkles size={16} className="text-blue-400" />
             </div>
             <div>
               <p className="text-white font-semibold text-sm">UMAX AI Fleet Analyst</p>
               <p className="text-zinc-500 text-xs">Powered by fleet intelligence • Always on</p>
+            </div>
+            <div className="ml-auto flex items-center gap-1.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+              </span>
+              <span className="text-emerald-400 text-xs font-medium">Online</span>
             </div>
           </div>
 
@@ -125,29 +135,29 @@ export function AIInsightsPage() {
               <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[75%] ${msg.role === 'user' ? '' : 'flex gap-3'}`}>
                   {msg.role === 'assistant' && (
-                    <div className="w-7 h-7 rounded-full bg-blue-600/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Sparkles size={13} className="text-blue-400" />
                     </div>
                   )}
                   <div>
-                    <div className={`rounded-xl px-4 py-3 text-sm leading-relaxed ${
+                    <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-zinc-800 text-zinc-200'
+                        ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-600/10'
+                        : 'bg-zinc-800/60 text-zinc-200 border border-zinc-700/40'
                     }`}>
                       {msg.content}
                     </div>
-                    <p className="text-zinc-600 text-xs mt-1 px-1">{msg.timestamp}</p>
+                    <p className="text-zinc-600 text-xs mt-1.5 px-1">{msg.timestamp}</p>
                   </div>
                 </div>
               </div>
             ))}
             {loading && (
               <div className="flex justify-start gap-3">
-                <div className="w-7 h-7 rounded-full bg-blue-600/20 flex items-center justify-center flex-shrink-0">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center flex-shrink-0">
                   <Sparkles size={13} className="text-blue-400" />
                 </div>
-                <div className="bg-zinc-800 rounded-xl px-4 py-3 flex gap-1 items-center">
+                <div className="bg-zinc-800/60 border border-zinc-700/40 rounded-2xl px-4 py-3 flex gap-1.5 items-center">
                   {[0, 1, 2].map((i) => (
                     <span
                       key={i}
@@ -162,13 +172,13 @@ export function AIInsightsPage() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-zinc-800 flex gap-2">
+          <div className="p-4 border-t border-zinc-800/60 flex gap-2 bg-zinc-900/30">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
               placeholder="Ask anything about your fleet..."
-              className="flex-1 bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-blue-500"
+              className="flex-1 bg-zinc-800/50 border border-zinc-700/50 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/10 transition-all duration-200"
             />
             <Button onClick={() => sendMessage(input)} disabled={!input.trim() || loading}>
               <Send size={16} />

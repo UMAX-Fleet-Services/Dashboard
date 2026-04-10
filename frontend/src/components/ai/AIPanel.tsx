@@ -61,7 +61,7 @@ export function AIPanel() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 z-40"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
             onClick={toggleAIPanel}
           />
           <motion.div
@@ -69,12 +69,12 @@ export function AIPanel() {
             animate={{ x: 0 }}
             exit={{ x: 400 }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed right-0 top-0 h-full w-[380px] bg-zinc-950 border-l border-zinc-800 z-50 flex flex-col"
+            className="fixed right-0 top-0 h-full w-[400px] bg-zinc-950/95 backdrop-blur-xl border-l border-zinc-800/60 z-50 flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-zinc-800">
+            <div className="flex items-center justify-between p-4 border-b border-zinc-800/60">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center">
                   <Sparkles size={16} className="text-blue-400" />
                 </div>
                 <div>
@@ -82,20 +82,20 @@ export function AIPanel() {
                   <p className="text-zinc-500 text-xs">Powered by fleet intelligence</p>
                 </div>
               </div>
-              <button onClick={toggleAIPanel} className="text-zinc-400 hover:text-white cursor-pointer p-1">
+              <button onClick={toggleAIPanel} className="text-zinc-400 hover:text-white cursor-pointer p-1.5 hover:bg-zinc-800/50 rounded-lg transition-colors">
                 <X size={18} />
               </button>
             </div>
 
             {/* Proactive insights */}
-            <div className="p-3 border-b border-zinc-800 bg-blue-950/20">
-              <p className="text-xs text-zinc-400 mb-2 font-medium">PROACTIVE INSIGHTS</p>
+            <div className="p-3 border-b border-zinc-800/60 bg-gradient-to-b from-blue-950/20 to-transparent">
+              <p className="text-xs text-zinc-400 mb-2 font-semibold uppercase tracking-wider">Proactive Insights</p>
               <div className="flex flex-col gap-2">
-                <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-2">
+                <div className="bg-amber-500/10 border border-amber-500/15 rounded-xl p-2.5">
                   <p className="text-amber-400 text-xs font-medium">⚠ Revenue Opportunity</p>
                   <p className="text-zinc-400 text-xs mt-0.5">42 dormant cards could generate ~$12K/mo if reactivated.</p>
                 </div>
-                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-2">
+                <div className="bg-emerald-500/10 border border-emerald-500/15 rounded-xl p-2.5">
                   <p className="text-emerald-400 text-xs font-medium">✓ Performance Up</p>
                   <p className="text-zinc-400 text-xs mt-0.5">Net profit margin increased 2.1% vs last month.</p>
                 </div>
@@ -106,10 +106,10 @@ export function AIPanel() {
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
               {messages.map((msg) => (
                 <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
+                  <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm ${
                     msg.role === 'user'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-zinc-800 text-zinc-200'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-sm shadow-blue-600/10'
+                      : 'bg-zinc-800/60 text-zinc-200 border border-zinc-700/40'
                   }`}>
                     {msg.content}
                   </div>
@@ -117,7 +117,7 @@ export function AIPanel() {
               ))}
               {loading && (
                 <div className="flex justify-start">
-                  <div className="bg-zinc-800 rounded-xl px-3 py-2 flex gap-1">
+                  <div className="bg-zinc-800/60 border border-zinc-700/40 rounded-2xl px-3.5 py-2.5 flex gap-1.5">
                     {[0, 1, 2].map((i) => (
                       <span
                         key={i}
@@ -137,7 +137,7 @@ export function AIPanel() {
                 <button
                   key={p}
                   onClick={() => sendMessage(p)}
-                  className="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-2 py-1 rounded-full cursor-pointer transition-colors"
+                  className="text-xs bg-zinc-800/50 hover:bg-zinc-700/50 text-zinc-300 px-2.5 py-1.5 rounded-full cursor-pointer transition-all duration-200 border border-zinc-700/30 hover:border-zinc-600/50"
                 >
                   {p}
                 </button>
@@ -145,13 +145,13 @@ export function AIPanel() {
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-zinc-800 flex gap-2">
+            <div className="p-4 border-t border-zinc-800/60 flex gap-2">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
                 placeholder="Ask about your fleet..."
-                className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-blue-500"
+                className="flex-1 bg-zinc-800/50 border border-zinc-700/50 rounded-xl px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/10 transition-all duration-200"
               />
               <Button size="sm" onClick={() => sendMessage(input)} disabled={!input.trim() || loading}>
                 <Send size={14} />

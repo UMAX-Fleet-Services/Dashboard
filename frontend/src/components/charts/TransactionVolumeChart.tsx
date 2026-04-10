@@ -15,8 +15,8 @@ import type { CustomTooltipProps } from '@/lib/chartTypes'
 function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-sm shadow-xl">
-      <p className="text-zinc-400 mb-1">{label}</p>
+    <div className="bg-zinc-900/95 backdrop-blur-xl border border-zinc-700/60 rounded-xl p-3 text-sm shadow-2xl shadow-black/40">
+      <p className="text-zinc-400 mb-1 font-medium">{label}</p>
       <p className="text-blue-400 font-semibold">{payload[0]?.value} transactions</p>
       <p className="text-emerald-400">${(payload[1]?.value as number)?.toLocaleString()} revenue</p>
     </div>
@@ -43,13 +43,13 @@ export function TransactionVolumeChart() {
     <Card className="col-span-2">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-white font-semibold">Transaction Volume</h3>
-        <div className="flex gap-1">
+        <div className="flex gap-1 bg-zinc-800/50 rounded-xl p-1">
           {(['daily', 'weekly'] as const).map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-3 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
-                view === v ? 'bg-blue-600 text-white' : 'text-zinc-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${
+                view === v ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/20' : 'text-zinc-400 hover:text-white'
               }`}
             >
               {v.charAt(0).toUpperCase() + v.slice(1)}
@@ -69,7 +69,7 @@ export function TransactionVolumeChart() {
               <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#27272A" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#27272A" vertical={false} />
           <XAxis dataKey="date" tick={{ fill: '#71717A', fontSize: 11 }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fill: '#71717A', fontSize: 11 }} axisLine={false} tickLine={false} />
           <Tooltip content={<TooltipContent />} />

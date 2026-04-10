@@ -49,12 +49,12 @@ export function CardsPage() {
         <div className="grid grid-cols-4 gap-4">
           {cardUsageData.map((d) => (
             <Card key={d.name} className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: d.color + '20' }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: d.color + '15', boxShadow: `0 0 12px ${d.color}10` }}>
                 <CreditCard size={18} style={{ color: d.color }} />
               </div>
               <div>
                 <p className="text-zinc-400 text-xs">{d.name}</p>
-                <p className="text-white font-bold text-xl">{d.value}</p>
+                <p className="text-white font-bold text-xl tracking-tight">{d.value}</p>
               </div>
             </Card>
           ))}
@@ -64,13 +64,13 @@ export function CardsPage() {
           <div className="col-span-2 space-y-4">
             {/* Search bar */}
             <div className="flex items-center justify-between">
-              <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+              <div className="relative group">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-blue-400 transition-colors" />
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search cards..."
-                  className="bg-zinc-900 border border-zinc-700 rounded-lg pl-9 pr-3 py-1.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-blue-500 w-56"
+                  className="bg-zinc-900/80 border border-zinc-700/60 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/10 w-56 transition-all duration-200"
                 />
               </div>
               <Button size="sm">
@@ -82,7 +82,7 @@ export function CardsPage() {
             <Card className="p-0 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="border-b border-zinc-800">
+                  <thead className="border-b border-zinc-800/60 bg-zinc-900/50">
                     <tr>
                       {['Card', 'Driver', 'Rep', 'Status', 'Gallons', 'Last Used', 'Limit'].map((h) => (
                         <th key={h} className="text-left px-4 py-3 text-zinc-400 font-medium text-xs">{h}</th>
@@ -91,7 +91,7 @@ export function CardsPage() {
                   </thead>
                   <tbody>
                     {filtered.map((c) => (
-                      <tr key={c.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/30">
+                      <tr key={c.id} className="border-b border-zinc-800/30 hover:bg-zinc-800/20 transition-colors">
                         <td className="px-4 py-2.5 font-mono text-sm text-white">{c.masked}</td>
                         <td className="px-4 py-2.5 text-zinc-300">{c.driver}</td>
                         <td className="px-4 py-2.5 text-zinc-400 text-xs">{c.employee}</td>
