@@ -16,12 +16,16 @@ import exportRouter from './routes/export.js'
 
 const app = express()
 const httpServer = createServer(app)
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost']
+
 const io = new Server(httpServer, {
-  cors: { origin: ['http://localhost:5173', 'http://localhost:3000'], methods: ['GET', 'POST'] }
+  cors: { origin: allowedOrigins, methods: ['GET', 'POST'] }
 })
 
 app.use(helmet())
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:3000'] }))
+app.use(cors({ origin: allowedOrigins }))
 app.use(express.json())
 
 app.use('/api/kpis', kpisRouter)

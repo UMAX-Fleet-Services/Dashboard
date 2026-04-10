@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Layout } from '@/components/layout/Layout'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -44,15 +44,17 @@ export function AIInsightsPage() {
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const idxRef = useRef(0)
+  const msgIdRef = useRef(100)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const sendMessage = (text: string) => {
+  const sendMessage = useCallback((text: string) => {
     if (!text.trim() || loading) return
+    const id = msgIdRef.current++
     const userMsg: Message = {
-      id: Date.now().toString(),
+      id: String(id),
       role: 'user',
       content: text,
       timestamp: new Date().toLocaleTimeString(),
@@ -63,15 +65,16 @@ export function AIInsightsPage() {
     setTimeout(() => {
       const response = aiResponses[idxRef.current % aiResponses.length]
       idxRef.current++
+      const replyId = msgIdRef.current++
       setMessages((m) => [...m, {
-        id: (Date.now() + 1).toString(),
+        id: String(replyId),
         role: 'assistant',
         content: response,
         timestamp: new Date().toLocaleTimeString(),
       }])
       setLoading(false)
-    }, 1000 + Math.random() * 1000)
-  }
+    }, 1500)
+  }, [loading])
 
   return (
     <Layout>
