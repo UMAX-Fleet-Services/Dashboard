@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Send, Sparkles } from 'lucide-react'
 import { useStore } from '@/store/useStore'
@@ -34,24 +34,27 @@ export function AIPanel() {
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const responseIdxRef = useRef(0)
+  const msgIdRef = useRef(1)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const sendMessage = (text: string) => {
+  const sendMessage = useCallback((text: string) => {
     if (!text.trim() || loading) return
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: text }
+    const id = msgIdRef.current++
+    const userMsg: Message = { id: String(id), role: 'user', content: text }
     setMessages((m) => [...m, userMsg])
     setInput('')
     setLoading(true)
     setTimeout(() => {
       const response = aiResponses[responseIdxRef.current % aiResponses.length]
       responseIdxRef.current++
-      setMessages((m) => [...m, { id: (Date.now() + 1).toString(), role: 'assistant', content: response }])
+      const replyId = msgIdRef.current++
+      setMessages((m) => [...m, { id: String(replyId), role: 'assistant', content: response }])
       setLoading(false)
-    }, 1200 + Math.random() * 800)
-  }
+    }, 1500)
+  }, [loading])
 
   return (
     <AnimatePresence>
