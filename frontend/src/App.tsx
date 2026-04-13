@@ -12,7 +12,7 @@ import { DocumentsPage } from './pages/DocumentsPage'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/" element={<OverviewPage />} />
         <Route path="/transactions" element={<TransactionsPage />} />

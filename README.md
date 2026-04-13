@@ -109,86 +109,200 @@ API runs at http://localhost:3001
 - Typography: Inter font family
 - Inspired by Linear, Vercel Dashboard, and Stripe Atlas
 
-## Deployment (Demo with Mock Data)
+## Deployment
 
-### Docker (Recommended)
+This project supports multiple deployment methods — from one-click cloud platforms to fully self-hosted Docker.
 
-One command to run the entire dashboard:
+### Quick Deployment Summary
 
-```bash
-docker compose up --build
-```
+| Component | Platform | One-Click / Config File |
+|-----------|----------|------------------------|
+| Frontend | **GitHub Pages** | Automatic on push to `main` ([workflow](.github/workflows/deploy-pages.yml)) |
+| Frontend | **Vercel** | [`frontend/vercel.json`](frontend/vercel.json) — connect repo in dashboard |
+| Frontend | **Netlify** | [`frontend/netlify.toml`](frontend/netlify.toml) — connect repo in dashboard |
+| Backend | **Fly.io** | [`fly.toml`](fly.toml) — `fly launch && fly deploy` |
+| Full Stack | **Render** | [`render.yaml`](render.yaml) — one-click Blueprint |
+| Full Stack | **Railway** | [`railway.toml`](railway.toml) — `railway up` |
+| Full Stack | **Docker (GHCR)** | Auto-published on push to `main` ([workflow](.github/workflows/docker-publish.yml)) |
+| Streamlit | **Streamlit Cloud** | Point to `streamlit_app.py` at [share.streamlit.io](https://share.streamlit.io) |
 
-Opens at **http://localhost** — frontend + backend running together with demo data.
+---
 
-### Manual Deployment
+### 🚀 GitHub Pages (Frontend)
 
-**Frontend** (static build):
+The frontend is **automatically deployed** to GitHub Pages on every push to `main`.
 
+**Setup** (one-time):
+1. Go to **Settings → Pages** in your GitHub repo
+2. Set **Source** to **GitHub Actions**
+3. Push to `main` — the deploy workflow runs automatically
+
+The deployment URL will be: `https://umax-fleet-services.github.io/Dashboard/`
+
+> **Note**: GitHub Pages only hosts the static frontend. For the full dashboard with API + WebSocket, use one of the full-stack options below.
+
+---
+
+### ▲ Vercel (Frontend)
+
+1. Go to [vercel.com/new](https://vercel.com/new)
+2. Import this repo
+3. Set **Root Directory** to `frontend`
+4. Vercel auto-detects Vite — click **Deploy**
+5. Set environment variable `VITE_API_URL` to your backend URL
+
+Config: [`frontend/vercel.json`](frontend/vercel.json)
+
+---
+
+### ◆ Netlify (Frontend)
+
+1. Go to [app.netlify.com](https://app.netlify.com) → **Add new site** → **Import from Git**
+2. Select this repo
+3. Netlify auto-detects settings from `frontend/netlify.toml`
+4. Set environment variable `BACKEND_URL` to your backend URL
+5. Click **Deploy**
+
+Or via CLI:
 ```bash
 cd frontend
-npm ci
-npm run build
-# Serve the dist/ folder with any static server
-npx serve dist -l 5173
+npx netlify-cli login
+npx netlify-cli init
+npx netlify-cli deploy --prod
 ```
 
-**Backend** (API server):
+Config: [`frontend/netlify.toml`](frontend/netlify.toml)
+
+---
+
+### 🪁 Fly.io (Backend API)
 
 ```bash
-cd backend
-npm ci
-npm start
+# Install Fly CLI
+curl -L https://fly.io/install.sh | sh
+
+# Login & deploy
+fly auth login
+fly launch --no-deploy
+fly secrets set ANTHROPIC_API_KEY=your-key JWT_SECRET=your-secret
+fly deploy
 ```
 
-API runs at http://localhost:3001
+Your API will be live at `https://umax-dashboard.fly.dev`
 
-### Cloud Deployment
+Config: [`fly.toml`](fly.toml)
 
-| Service | Deploy Target | Notes |
-|---------|---------------|-------|
-| Frontend | Vercel, Netlify, Cloudflare Pages | Deploy `frontend/dist` after `npm run build` |
-| Backend | Railway, Render, Fly.io | Deploy `backend/` with `npm start` |
-| Streamlit | Streamlit Community Cloud | Point to `streamlit_app.py` in this repo |
-| Full Stack | Any Docker host | Use `docker compose up --build` |
+---
 
-Set `ALLOWED_ORIGINS` environment variable on the backend to match your frontend URL.
+### 🟣 Render (Full Stack — One Click)
 
-## Streamlit Dashboard (Quick Preview)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/UMAX-Fleet-Services/Dashboard)
 
-A Python-based Streamlit version of the dashboard is included for quick deployment and previewing.
+1. Click the button above (or go to [dashboard.render.com/blueprints](https://dashboard.render.com/blueprints))
+2. Select this repo
+3. Render creates **3 services** automatically: Frontend, Backend, and Streamlit
+4. Set `ANTHROPIC_API_KEY` when prompted
 
-### Run Locally
+Config: [`render.yaml`](render.yaml)
+
+---
+
+### 🚂 Railway (Full Stack)
 
 ```bash
-pip install -r requirements-streamlit.txt
-streamlit run streamlit_app.py
+# Install Railway CLI
+npm install -g @railway/cli
+
+# Login & deploy
+railway login
+railway init
+railway up
 ```
 
-Opens at **http://localhost:8501**
+Or connect the repo at [railway.app](https://railway.app) and Railway auto-detects the config.
 
-### Run with Docker
+Config: [`railway.toml`](railway.toml) / [`railway.json`](railway.json)
 
-```bash
-docker compose up streamlit --build
-```
+---
 
-Opens at **http://localhost:8501**
+### 🐳 Docker (Self-Hosted / Any Cloud VM)
 
-Or run the full stack (frontend + backend + streamlit) together:
+**Local:**
 
 ```bash
 docker compose up --build
 ```
 
-### Deploy to Streamlit Community Cloud
+Opens at **http://localhost** — frontend + backend + Streamlit running together with demo data.
 
-1. Push this repo to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Select this repo, branch, and `streamlit_app.py` as the main file
-4. Click **Deploy** — the app will be live in seconds
+**Pre-built images from GitHub Container Registry:**
+
+Docker images are automatically published to GHCR on every push to `main`:
+
+```bash
+# Pull the latest images
+docker pull ghcr.io/umax-fleet-services/dashboard/frontend:latest
+docker pull ghcr.io/umax-fleet-services/dashboard/backend:latest
+docker pull ghcr.io/umax-fleet-services/dashboard/streamlit:latest
+
+# Run individually
+docker run -p 80:80 ghcr.io/umax-fleet-services/dashboard/frontend:latest
+docker run -p 3001:3001 ghcr.io/umax-fleet-services/dashboard/backend:latest
+docker run -p 8501:8501 ghcr.io/umax-fleet-services/dashboard/streamlit:latest
+```
+
+Or use docker compose with the published images:
+
+```yaml
+# docker-compose.prod.yml
+services:
+  frontend:
+    image: ghcr.io/umax-fleet-services/dashboard/frontend:latest
+    ports: ["80:80"]
+  backend:
+    image: ghcr.io/umax-fleet-services/dashboard/backend:latest
+    ports: ["3001:3001"]
+  streamlit:
+    image: ghcr.io/umax-fleet-services/dashboard/streamlit:latest
+    ports: ["8501:8501"]
+```
+
+CI workflow: [`.github/workflows/docker-publish.yml`](.github/workflows/docker-publish.yml)
+
+---
+
+### 🎈 Streamlit Community Cloud
+
+1. Go to [share.streamlit.io](https://share.streamlit.io)
+2. Select this repo, branch `main`, and `streamlit_app.py` as the main file
+3. Click **Deploy** — the app will be live in seconds
 
 The Streamlit app includes all dashboard pages: Overview, Transactions, Sales Performance, Finance, Fuel Prices, Customers, and Cards Management — all running with the same demo data.
+
+---
+
+### Environment Variables
+
+| Variable | Required | Where | Description |
+|----------|----------|-------|-------------|
+| `VITE_API_URL` | Optional | Frontend | Backend API URL (for Vercel/Netlify — not needed for Docker) |
+| `BACKEND_URL` | Optional | Netlify | Backend URL for API proxy redirects |
+| `PORT` | Yes | Backend | Server port (default: `3001`) |
+| `NODE_ENV` | Yes | Backend | Set to `production` |
+| `ALLOWED_ORIGINS` | Yes | Backend | Comma-separated frontend URLs for CORS |
+| `ANTHROPIC_API_KEY` | Optional | Backend | Enables Claude AI chat responses |
+| `JWT_SECRET` | Optional | Backend | Secret for JWT token signing |
+| `DATABASE_URL` | Optional | Backend | PostgreSQL connection string (for production data) |
+
+---
+
+## CI/CD Pipelines
+
+| Workflow | Trigger | What it does |
+|----------|---------|-------------|
+| [CI & Docker Build](.github/workflows/ci.yml) | Push/PR to `main` | Lint, build, and Docker compose build |
+| [Deploy to GitHub Pages](.github/workflows/deploy-pages.yml) | Push to `main` | Builds frontend and deploys to GitHub Pages |
+| [Publish Docker Images](.github/workflows/docker-publish.yml) | Push to `main` / tags | Builds and pushes images to GHCR |
 
 ## Production Notes
 
