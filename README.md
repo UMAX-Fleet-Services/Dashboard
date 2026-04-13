@@ -109,6 +109,87 @@ API runs at http://localhost:3001
 - Typography: Inter font family
 - Inspired by Linear, Vercel Dashboard, and Stripe Atlas
 
+## Deployment (Demo with Mock Data)
+
+### Docker (Recommended)
+
+One command to run the entire dashboard:
+
+```bash
+docker compose up --build
+```
+
+Opens at **http://localhost** — frontend + backend running together with demo data.
+
+### Manual Deployment
+
+**Frontend** (static build):
+
+```bash
+cd frontend
+npm ci
+npm run build
+# Serve the dist/ folder with any static server
+npx serve dist -l 5173
+```
+
+**Backend** (API server):
+
+```bash
+cd backend
+npm ci
+npm start
+```
+
+API runs at http://localhost:3001
+
+### Cloud Deployment
+
+| Service | Deploy Target | Notes |
+|---------|---------------|-------|
+| Frontend | Vercel, Netlify, Cloudflare Pages | Deploy `frontend/dist` after `npm run build` |
+| Backend | Railway, Render, Fly.io | Deploy `backend/` with `npm start` |
+| Streamlit | Streamlit Community Cloud | Point to `streamlit_app.py` in this repo |
+| Full Stack | Any Docker host | Use `docker compose up --build` |
+
+Set `ALLOWED_ORIGINS` environment variable on the backend to match your frontend URL.
+
+## Streamlit Dashboard (Quick Preview)
+
+A Python-based Streamlit version of the dashboard is included for quick deployment and previewing.
+
+### Run Locally
+
+```bash
+pip install -r requirements-streamlit.txt
+streamlit run streamlit_app.py
+```
+
+Opens at **http://localhost:8501**
+
+### Run with Docker
+
+```bash
+docker compose up streamlit --build
+```
+
+Opens at **http://localhost:8501**
+
+Or run the full stack (frontend + backend + streamlit) together:
+
+```bash
+docker compose up --build
+```
+
+### Deploy to Streamlit Community Cloud
+
+1. Push this repo to GitHub
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+3. Select this repo, branch, and `streamlit_app.py` as the main file
+4. Click **Deploy** — the app will be live in seconds
+
+The Streamlit app includes all dashboard pages: Overview, Transactions, Sales Performance, Finance, Fuel Prices, Customers, and Cards Management — all running with the same demo data.
+
 ## Production Notes
 
 To use with real data:
