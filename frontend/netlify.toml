@@ -1,0 +1,41 @@
+# Netlify deployment configuration
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+#
+# Usage:
+#   Option A — Connect repo in Netlify dashboard:
+#     1. Go to https://app.netlify.com
+#     2. Click "Add new site" → "Import an existing project"
+#     3. Select this repo and set base directory to "frontend"
+#
+#   Option B — Netlify CLI:
+#     1. Install: npm install -g netlify-cli
+#     2. Login: netlify login
+#     3. Init: cd frontend && netlify init
+#     4. Deploy: netlify deploy --prod
+
+[build]
+  base = "frontend"
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA fallback — redirect all routes to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Proxy API requests to the backend (set BACKEND_URL in Netlify env vars)
+[[redirects]]
+  from = "/api/*"
+  to = ":BACKEND_URL/api/:splat"
+  status = 200
+  force = true
+
+# Cache immutable assets for 1 year
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

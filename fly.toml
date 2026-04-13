@@ -1,0 +1,46 @@
+# Fly.io deployment configuration for the backend API
+# https://fly.io/docs/reference/configuration/
+#
+# Usage:
+#   1. Install flyctl: curl -L https://fly.io/install.sh | sh
+#   2. Login: fly auth login
+#   3. Launch: fly launch --no-deploy
+#   4. Set secrets: fly secrets set ANTHROPIC_API_KEY=your-key JWT_SECRET=your-secret
+#   5. Deploy: fly deploy
+#
+# For the frontend, deploy separately to Fly or use GitHub Pages/Vercel/Netlify.
+# For Streamlit, create a separate Fly app with Dockerfile.streamlit.
+
+app = "umax-dashboard"
+primary_region = "iad"
+
+[build]
+  dockerfile = "backend/Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3001"
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 250
+    soft_limit = 200
+
+[[http_service.checks]]
+  grace_period = "10s"
+  interval = "30s"
+  method = "GET"
+  timeout = "5s"
+  path = "/health"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1

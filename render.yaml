@@ -1,0 +1,64 @@
+# Render Blueprint — deploy the full stack with one click
+# https://render.com/docs/blueprint-spec
+#
+# Usage:
+#   1. Push this repo to GitHub
+#   2. Go to https://dashboard.render.com/blueprints
+#   3. Click "New Blueprint Instance" and select this repo
+#   4. Render will create all services automatically
+
+services:
+  # Frontend — static site served by Render CDN
+  - type: web
+    name: umax-dashboard-frontend
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: frontend/dist
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: umax-dashboard-backend
+          type: web
+          property: hostport
+        # Override format: https://umax-dashboard-backend.onrender.com
+
+  # Backend — Node.js API
+  - type: web
+    name: umax-dashboard-backend
+    runtime: node
+    buildCommand: cd backend && npm ci
+    startCommand: cd backend && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+      - key: ALLOWED_ORIGINS
+        fromService:
+          name: umax-dashboard-frontend
+          type: web
+          property: host
+      - key: ANTHROPIC_API_KEY
+        sync: false  # Prompt user to enter manually
+      - key: JWT_SECRET
+        generateValue: true
+
+  # Streamlit — Python dashboard
+  - type: web
+    name: umax-dashboard-streamlit
+    runtime: python
+    buildCommand: pip install -r requirements-streamlit.txt
+    startCommand: streamlit run streamlit_app.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true
+    healthCheckPath: /_stcore/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
