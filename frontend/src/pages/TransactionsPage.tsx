@@ -15,7 +15,7 @@ import { ExportButton } from '@/components/ui/ExportButton'
 import { Card } from '@/components/ui/Card'
 import { transactions as initialTx } from '@/lib/mockData'
 import { useSocket } from '@/lib/useSocket'
-import { Play, Pause, Wifi, WifiOff } from 'lucide-react'
+import { Play, Pause } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { format } from 'date-fns'
 
@@ -104,6 +104,8 @@ export function TransactionsPage() {
     return () => clearInterval(timer)
   }, [live, connected])
 
+  // TanStack Table returns mutable helpers incompatible with React Compiler memoisation — safe to skip
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
