@@ -37,6 +37,7 @@ export function CustomersPage() {
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState('')
 
+  // TanStack Table returns mutable helpers incompatible with React Compiler memoisation — safe to skip
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: customers,

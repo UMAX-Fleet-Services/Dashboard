@@ -104,6 +104,7 @@ export function TransactionsPage() {
     return () => clearInterval(timer)
   }, [live, connected])
 
+  // TanStack Table returns mutable helpers incompatible with React Compiler memoisation — safe to skip
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
