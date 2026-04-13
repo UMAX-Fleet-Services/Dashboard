@@ -153,6 +153,28 @@ API runs at http://localhost:3001
 
 Set `ALLOWED_ORIGINS` environment variable on the backend to match your frontend URL.
 
+## Streamlit Dashboard (Quick Preview)
+
+A Python-based Streamlit version of the dashboard is included for quick deployment and previewing.
+
+### Run Locally
+
+```bash
+pip install -r requirements-streamlit.txt
+streamlit run streamlit_app.py
+```
+
+Opens at **http://localhost:8501**
+
+### Deploy to Streamlit Community Cloud
+
+1. Push this repo to GitHub
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+3. Select this repo, branch, and `streamlit_app.py` as the main file
+4. Click **Deploy** — the app will be live in seconds
+
+The Streamlit app includes all dashboard pages: Overview, Transactions, Sales Performance, Finance, Fuel Prices, Customers, and Cards Management — all running with the same demo data.
+
 ## Production Notes
 
 To use with real data:
