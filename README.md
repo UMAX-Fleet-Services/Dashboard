@@ -149,6 +149,7 @@ API runs at http://localhost:3001
 |---------|---------------|-------|
 | Frontend | Vercel, Netlify, Cloudflare Pages | Deploy `frontend/dist` after `npm run build` |
 | Backend | Railway, Render, Fly.io | Deploy `backend/` with `npm start` |
+| Streamlit | Streamlit Community Cloud | Point to `streamlit_app.py` in this repo |
 | Full Stack | Any Docker host | Use `docker compose up --build` |
 
 Set `ALLOWED_ORIGINS` environment variable on the backend to match your frontend URL.
@@ -165,6 +166,20 @@ streamlit run streamlit_app.py
 ```
 
 Opens at **http://localhost:8501**
+
+### Run with Docker
+
+```bash
+docker compose up streamlit --build
+```
+
+Opens at **http://localhost:8501**
+
+Or run the full stack (frontend + backend + streamlit) together:
+
+```bash
+docker compose up --build
+```
 
 ### Deploy to Streamlit Community Cloud
 
