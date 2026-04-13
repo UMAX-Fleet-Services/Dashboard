@@ -30,3 +30,7 @@ npm-debug.log*
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Python
+__pycache__/
+*.pyc
