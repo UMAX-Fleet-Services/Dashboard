@@ -136,13 +136,13 @@ export function TransactionsPage() {
         <Card className="p-0 overflow-hidden" ref={tableRef}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-zinc-800">
+              <thead className="border-b border-zinc-800/60 bg-zinc-900/50">
                 {table.getHeaderGroups().map((hg) => (
                   <tr key={hg.id}>
                     {hg.headers.map((h) => (
                       <th
                         key={h.id}
-                        className="text-left px-4 py-3 text-zinc-400 font-medium text-xs cursor-pointer select-none hover:text-white"
+                        className="text-left px-4 py-3 text-zinc-400 font-medium text-xs cursor-pointer select-none hover:text-white transition-colors"
                         onClick={h.column.getToggleSortingHandler()}
                       >
                         {flexRender(h.column.columnDef.header, h.getContext())}
@@ -154,7 +154,7 @@ export function TransactionsPage() {
               </thead>
               <tbody>
                 {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors">
+                  <tr key={row.id} className="border-b border-zinc-800/30 hover:bg-zinc-800/20 transition-colors">
                     {row.getVisibleCells().map((cell) => (
                       <td key={cell.id} className="px-4 py-2.5 text-zinc-300">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -165,23 +165,17 @@ export function TransactionsPage() {
               </tbody>
             </table>
           </div>
-          <div className="px-4 py-2 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+          <div className="px-4 py-2.5 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-500 bg-zinc-900/30">
             <span>{table.getFilteredRowModel().rows.length} transactions</span>
-            <div className="flex items-center gap-3">
-              {connected && (
-                <span className="flex items-center gap-1.5 text-blue-400">
-                  <Wifi size={12} />
-                  Live API
+            {live && (
+              <span className="flex items-center gap-1.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
                 </span>
-              )}
-              {!connected && live && (
-                <span className="flex items-center gap-1.5 text-zinc-500">
-                  <WifiOff size={12} />
-                  Demo Mode
-                </span>
-              )}
-              {live && <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />Live</span>}
-            </div>
+                <span className="text-emerald-400 font-medium">Live</span>
+              </span>
+            )}
           </div>
         </Card>
       </div>

@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { RevenueStackedChart } from '@/components/charts/RevenueStackedChart'
 import { financePLData, invoices } from '@/lib/mockData'
+import { DollarSign, TrendingUp, TrendingDown, Percent } from 'lucide-react'
 
 const invoiceStatusVariant = {
   paid: 'success' as const,
@@ -10,27 +11,41 @@ const invoiceStatusVariant = {
   pending: 'warning' as const,
 }
 
+const summaryIcons = [DollarSign, TrendingDown, TrendingUp, Percent]
+const summaryColors = ['from-blue-600/10 to-blue-600/5', 'from-red-600/10 to-red-600/5', 'from-emerald-600/10 to-emerald-600/5', 'from-blue-600/10 to-blue-600/5']
+const iconColors = ['text-blue-400', 'text-red-400', 'text-emerald-400', 'text-blue-400']
+
 export function FinancePage() {
   const total = financePLData[0].value
   const netProfit = financePLData[financePLData.length - 1].value
   const margin = ((netProfit / total) * 100).toFixed(1)
+
+  const summaryData = [
+    { label: 'Gross Revenue', value: `$${(187200).toLocaleString()}`, color: 'text-white' },
+    { label: 'Total Expenses', value: `$${(144100).toLocaleString()}`, color: 'text-red-400' },
+    { label: 'Net Profit', value: `$${(43100).toLocaleString()}`, color: 'text-emerald-400' },
+    { label: 'Net Margin', value: `${margin}%`, color: 'text-blue-400' },
+  ]
 
   return (
     <Layout>
       <div className="space-y-6">
         {/* Summary cards */}
         <div className="grid grid-cols-4 gap-4">
-          {[
-            { label: 'Gross Revenue', value: `$${(187200).toLocaleString()}`, color: 'text-white' },
-            { label: 'Total Expenses', value: `$${(144100).toLocaleString()}`, color: 'text-red-400' },
-            { label: 'Net Profit', value: `$${(43100).toLocaleString()}`, color: 'text-emerald-400' },
-            { label: 'Net Margin', value: `${margin}%`, color: 'text-blue-400' },
-          ].map((s) => (
-            <Card key={s.label} className="text-center">
-              <p className="text-zinc-400 text-sm">{s.label}</p>
-              <p className={`text-2xl font-bold mt-1 ${s.color}`}>{s.value}</p>
-            </Card>
-          ))}
+          {summaryData.map((s, i) => {
+            const Icon = summaryIcons[i]
+            return (
+              <Card key={s.label} className={`text-center bg-gradient-to-b ${summaryColors[i]} relative overflow-hidden`}>
+                <div className="flex justify-center mb-2">
+                  <div className={`w-8 h-8 rounded-xl bg-zinc-800/50 flex items-center justify-center`}>
+                    <Icon size={16} className={iconColors[i]} />
+                  </div>
+                </div>
+                <p className="text-zinc-400 text-sm">{s.label}</p>
+                <p className={`text-2xl font-bold mt-1 tracking-tight ${s.color}`}>{s.value}</p>
+              </Card>
+            )
+          })}
         </div>
 
         {/* Stacked revenue chart */}
@@ -40,9 +55,9 @@ export function FinancePage() {
           {/* P&L Waterfall */}
           <Card>
             <h3 className="text-white font-semibold mb-4">P&amp;L Breakdown</h3>
-            <div className="space-y-2">
+            <div className="space-y-1">
               {financePLData.map((item) => (
-                <div key={item.name} className="flex items-center justify-between py-1.5 border-b border-zinc-800/50 last:border-0">
+                <div key={item.name} className="flex items-center justify-between py-2 px-2 border-b border-zinc-800/30 last:border-0 rounded-lg hover:bg-zinc-800/20 transition-colors">
                   <span className="text-zinc-400 text-sm">{item.name}</span>
                   <span className={`font-semibold text-sm ${
                     item.type === 'total' ? 'text-white' : item.value > 0 ? 'text-emerald-400' : 'text-red-400'
@@ -56,27 +71,27 @@ export function FinancePage() {
         </div>
 
         {/* Invoice tracker */}
-        <Card>
-          <div className="flex items-center justify-between mb-4">
+        <Card className="p-0 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800/60 bg-zinc-900/50">
             <h3 className="text-white font-semibold">Vendor Invoice Tracker</h3>
-            <div className="flex gap-2 text-xs text-zinc-500">
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />Paid</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-400 inline-block" />Overdue</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />Pending</span>
+            <div className="flex gap-3 text-xs text-zinc-500">
+              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400 inline-block shadow-sm shadow-emerald-400/30" />Paid</span>
+              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-400 inline-block shadow-sm shadow-red-400/30" />Overdue</span>
+              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block shadow-sm shadow-amber-400/30" />Pending</span>
             </div>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-zinc-800">
+              <thead className="border-b border-zinc-800/60">
                 <tr>
                   {['Invoice', 'Vendor', 'Amount', 'Due Date', 'Status'].map((h) => (
-                    <th key={h} className="text-left px-3 py-2 text-zinc-400 font-medium text-xs">{h}</th>
+                    <th key={h} className="text-left px-3 py-2.5 text-zinc-400 font-medium text-xs">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {invoices.map((inv) => (
-                  <tr key={inv.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/30">
+                  <tr key={inv.id} className="border-b border-zinc-800/30 hover:bg-zinc-800/20 transition-colors">
                     <td className="px-3 py-2.5 font-mono text-xs text-zinc-400">{inv.id}</td>
                     <td className="px-3 py-2.5 text-white">{inv.vendor}</td>
                     <td className="px-3 py-2.5 text-white font-semibold">${inv.amount.toLocaleString()}</td>

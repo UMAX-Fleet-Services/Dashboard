@@ -16,8 +16,8 @@ import type { CustomTooltipProps } from '@/lib/chartTypes'
 function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-3 text-sm shadow-xl">
-      <p className="text-zinc-400 mb-2">{label}</p>
+    <div className="bg-zinc-900/95 backdrop-blur-xl border border-zinc-700/60 rounded-xl p-3 text-sm shadow-2xl shadow-black/40">
+      <p className="text-zinc-400 mb-2 font-medium">{label}</p>
       {payload.map((p) => (
         <p key={String(p.dataKey)} style={{ color: p.color }} className="font-medium">
           {p.name}: {p.name === 'Margin' ? `${p.value}%` : `$${(p.value as number)?.toLocaleString()}`}
@@ -39,15 +39,15 @@ export function RevenueBarChart() {
       </div>
       <ResponsiveContainer width="100%" height={240}>
         <ComposedChart data={revenueBarData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#27272A" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#27272A" vertical={false} />
           <XAxis dataKey="week" tick={{ fill: '#71717A', fontSize: 11 }} axisLine={false} tickLine={false} />
           <YAxis yAxisId="left" tick={{ fill: '#71717A', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
           <YAxis yAxisId="right" orientation="right" tick={{ fill: '#71717A', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
           <Tooltip content={<TooltipContent />} />
           <Legend wrapperStyle={{ color: '#A1A1AA', fontSize: 12 }} />
-          <Bar yAxisId="left" dataKey="revenue" name="Revenue" fill="#3B82F6" radius={[4, 4, 0, 0]} />
-          <Bar yAxisId="left" dataKey="discount" name="Discount" fill="#EF4444" radius={[4, 4, 0, 0]} />
-          <Bar yAxisId="left" dataKey="vendorPayout" name="Vendor Payout" fill="#F59E0B" radius={[4, 4, 0, 0]} />
+          <Bar yAxisId="left" dataKey="revenue" name="Revenue" fill="#3B82F6" radius={[6, 6, 0, 0]} />
+          <Bar yAxisId="left" dataKey="discount" name="Discount" fill="#EF4444" radius={[6, 6, 0, 0]} />
+          <Bar yAxisId="left" dataKey="vendorPayout" name="Vendor Payout" fill="#F59E0B" radius={[6, 6, 0, 0]} />
           <Line yAxisId="right" type="monotone" dataKey="netProfitMargin" name="Margin" stroke="#10B981" strokeWidth={2} dot={false} />
         </ComposedChart>
       </ResponsiveContainer>

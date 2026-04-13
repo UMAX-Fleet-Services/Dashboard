@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils'
 
 const variantClasses = {
-  default: 'bg-blue-600 hover:bg-blue-700 text-white',
-  outline: 'border border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-white bg-transparent',
-  ghost: 'hover:bg-zinc-800 text-zinc-400 hover:text-white bg-transparent',
-  destructive: 'bg-red-600 hover:bg-red-700 text-white',
+  default: 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30',
+  outline: 'border border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-white bg-transparent hover:bg-zinc-800/50',
+  ghost: 'hover:bg-zinc-800/60 text-zinc-400 hover:text-white bg-transparent',
+  destructive: 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white shadow-lg shadow-red-600/20',
 }
 
 const sizeClasses = {
@@ -23,7 +23,9 @@ export function Button({ variant = 'default', size = 'md', className, children, 
   return (
     <button
       className={cn(
-        'inline-flex items-center gap-2 rounded-lg font-medium transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed',
+        'inline-flex items-center gap-2 rounded-xl font-medium transition-all duration-200 cursor-pointer',
+        'disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none',
+        'active:scale-[0.98]',
         variantClasses[variant],
         sizeClasses[size],
         className

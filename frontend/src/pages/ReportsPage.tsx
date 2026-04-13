@@ -73,12 +73,12 @@ export function ReportsPage() {
         <p className="text-zinc-400 text-sm">Generate and download reports for your fleet data.</p>
 
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-          {reportTypes.map((r) => {
+          {reportTypes.map((r, i) => {
             const Icon = r.icon
             return (
-              <Card key={r.id} className="hover:border-zinc-700 transition-colors">
+              <Card key={r.id} className="hover:border-zinc-600/60 group animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
                 <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: r.color + '20' }}>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105" style={{ backgroundColor: r.color + '15', boxShadow: `0 0 12px ${r.color}10` }}>
                     <Icon size={18} style={{ color: r.color }} />
                   </div>
                   <div>
@@ -109,19 +109,19 @@ export function ReportsPage() {
         {/* Scheduled reports section */}
         <Card>
           <h3 className="text-white font-semibold mb-3">Scheduled Reports</h3>
-          <div className="space-y-2">
+          <div className="space-y-1">
             {[
               { name: 'Weekly Performance Summary', frequency: 'Every Monday, 8:00 AM', status: 'active' },
               { name: 'Monthly P&L Report', frequency: '1st of each month, 9:00 AM', status: 'active' },
               { name: 'Daily Transaction Log', frequency: 'Daily, 11:59 PM', status: 'paused' },
             ].map((s) => (
-              <div key={s.name} className="flex items-center justify-between py-2.5 border-b border-zinc-800/50 last:border-0">
+              <div key={s.name} className="flex items-center justify-between py-3 px-2 border-b border-zinc-800/30 last:border-0 rounded-lg hover:bg-zinc-800/20 transition-colors">
                 <div>
                   <p className="text-white text-sm font-medium">{s.name}</p>
                   <p className="text-zinc-500 text-xs">{s.frequency}</p>
                 </div>
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                  s.status === 'active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-zinc-700 text-zinc-400'
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                  s.status === 'active' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25' : 'bg-zinc-700/60 text-zinc-400 border border-zinc-600/30'
                 }`}>
                   {s.status}
                 </span>

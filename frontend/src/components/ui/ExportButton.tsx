@@ -46,18 +46,19 @@ export function ExportButton({ data, filename = 'export', chartRef }: ExportButt
       <Button variant="outline" size="sm" onClick={() => setOpen(!open)}>
         <Download size={14} />
         Export
-        <ChevronDown size={14} />
+        <ChevronDown size={14} className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </Button>
       {open && (
-        <div className="absolute right-0 top-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl z-50 min-w-[120px]">
+        <div className="absolute right-0 top-full mt-2 bg-zinc-900/95 backdrop-blur-xl border border-zinc-700/60 rounded-xl shadow-2xl shadow-black/40 z-50 min-w-[140px] overflow-hidden">
           <button
-            className="w-full text-left px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800 rounded-t-lg"
+            className="w-full text-left px-4 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800/60 hover:text-white transition-colors"
             onClick={exportCSV}
           >
             Export CSV
           </button>
+          <div className="h-px bg-zinc-800/60" />
           <button
-            className="w-full text-left px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800 rounded-b-lg"
+            className="w-full text-left px-4 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800/60 hover:text-white transition-colors"
             onClick={exportPNG}
           >
             Export PNG
