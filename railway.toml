@@ -8,10 +8,11 @@
 #   4. Deploy: railway up
 #
 # Or connect this repo in the Railway dashboard at https://railway.app
+# For full-stack, create separate Railway services for frontend, backend, and streamlit.
 
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "docker-compose.yml"
+dockerfilePath = "backend/Dockerfile"
 
 [deploy]
 healthcheckPath = "/health"

@@ -12,6 +12,11 @@
 #     2. Login: netlify login
 #     3. Init: cd frontend && netlify init
 #     4. Deploy: netlify deploy --prod
+#
+# For API proxy:
+#   The frontend connects directly to the backend URL via VITE_API_URL.
+#   Set VITE_API_URL in Netlify environment variables to your backend URL
+#   (e.g., https://umax-dashboard.fly.dev) before building.
 
 [build]
   base = "frontend"
@@ -26,13 +31,6 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
-# Proxy API requests to the backend (set BACKEND_URL in Netlify env vars)
-[[redirects]]
-  from = "/api/*"
-  to = ":BACKEND_URL/api/:splat"
-  status = 200
-  force = true
 
 # Cache immutable assets for 1 year
 [[headers]]
